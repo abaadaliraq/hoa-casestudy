@@ -9,7 +9,6 @@ const format = (value: number) =>
 
 const tableCount = 40;
 const guestCapacity = 120;
-const averageGuestsPerTable = guestCapacity / tableCount;
 
 const monthlyFixedCosts = 23200;
 const foodCostRate = 0.35;
