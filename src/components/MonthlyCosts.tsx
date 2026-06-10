@@ -249,16 +249,16 @@ export default function MonthlyCosts() {
               قراءة تشغيلية
             </p>
 
-            <h3 className="mt-3 text-3xl font-bold leading-tight">
-              هيكل الكادر أصبح أخف وأكثر قابلية للسيطرة
-            </h3>
+           <h3 className="mt-3 text-3xl font-bold leading-tight">
+  هيكل كادر منظم يدعم التشغيل اليومي بكفاءة
+</h3>
 
-            <p className="mt-5 leading-8 text-white/60">
-              بعد تحديث الرواتب، أصبح إجمالي الكادر 23 موظفًا بكلفة شهرية
-              مقدارها {format(totalSalaries)} دولار. هذا يجعل نقطة التعادل أقل
-              من الحساب السابق، لكنه لا يلغي الحاجة إلى ضبط الشفتات ومراقبة
-              الإنتاجية اليومية.
-            </p>
+           <p className="mt-5 leading-8 text-white/60">
+  يتكوّن الهيكل التشغيلي من {staffCount} موظفًا بكلفة رواتب شهرية مقدارها{" "}
+  {format(totalSalaries)} دولار. ويُعد ضبط الشفتات، توزيع المهام، ومراقبة
+  الإنتاجية اليومية عناصر أساسية للحفاظ على كفاءة التشغيل وتحقيق هامش ربح
+  مستقر.
+</p>
 
             <div className="mt-8 space-y-6">
               <ProgressBar
