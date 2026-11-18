@@ -1,34 +1,47 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Camera, CalendarDays, Coffee, Gem, Images, Users } from "lucide-react";
 
 const opportunities = [
   {
-    title: "مطعم بطابع تراثي",
-    text: "إمكانية تشغيل مطعم يقدم تجربة ضيافة مرتبطة بهوية المكان، بحيث لا يكون المنتج طعامًا فقط، بل تجربة متكاملة داخل بيئة تراثية.",
-    metric: "01",
+    icon: Coffee,
+    title: "دار الضيافة والكافيه",
+    text: "تشغيل يومي يحقق دخلاً مستمرًا من تجربة ضيافة وجلسات كافيه داخل موقع تراثي.",
   },
   {
-    title: "حديقة وجلسات خارجية",
-    text: "توفر الحديقة فرصة لإنشاء جلسات يومية وموسمية تناسب العوائل، الضيوف، والجلسات المسائية، مع قابلية تنظيم حجوزات خاصة.",
-    metric: "02",
+    icon: CalendarDays,
+    title: "المناسبات الخاصة",
+    text: "استثمار الموقع في حجوزات خاصة تبدأ من 3,000 دولار حسب نوع المناسبة والخدمات المطلوبة.",
   },
   {
-    title: "فعاليات وتجارب خاصة",
-    text: "يمكن استثمار المكان في أمسيات محدودة، مناسبات خاصة، جلسات ثقافية، تصوير، واستضافات نوعية تضيف مصادر دخل غير تقليدية.",
-    metric: "03",
+    icon: Camera,
+    title: "جلسات التصوير",
+    text: "تأجير الموقع للتصوير التجاري والشخصي وجلسات الأزياء، بأسعار تبدأ من 400 دولار للساعة.",
   },
   {
-    title: "قيمة المكان كعلامة",
-    text: "يمتلك بيت التحفيات قيمة اسمية وبصرية تساعد على بناء تسعير أعلى من المشاريع التقليدية، لأن المنافسة هنا تعتمد على التجربة وليس السعر فقط.",
-    metric: "04",
+    icon: Images,
+    title: "المعارض والفعاليات",
+    text: "تنظيم معارض فنية، أمسيات ثقافية، إطلاق منتجات، واستضافات نوعية تعزز قيمة المكان.",
   },
 ];
 
-const indicators = [
-  { label: "مصادر تشغيل", value: "4+" },
-  { label: "نموذج إيراد", value: "متعدد" },
-  { label: "اعتماد على الموقع", value: "مرتفع" },
+const summary = [
+  {
+    icon: Gem,
+    label: "قيمة المكان",
+    value: "أصل تراثي نادر",
+  },
+  {
+    icon: Users,
+    label: "طبيعة الجمهور",
+    value: "زوار، شركات، مصورون، جهات ثقافية",
+  },
+  {
+    icon: CalendarDays,
+    label: "نموذج التشغيل",
+    value: "يومي + حجوزات خاصة",
+  },
 ];
 
 export default function OperationalOpportunity() {
@@ -36,91 +49,69 @@ export default function OperationalOpportunity() {
     <section
       id="numbers"
       dir="rtl"
-      className="relative overflow-hidden bg-[#F8F6F2] px-5 py-20 md:px-10 md:py-28"
+      className="relative overflow-hidden bg-[#062F2C] px-5 py-20 text-white md:px-10 md:py-28"
     >
-      <div className="absolute -right-24 top-20 h-72 w-72 rounded-full bg-[#7A1018]/10 blur-3xl" />
-      <div className="absolute -left-24 bottom-20 h-72 w-72 rounded-full bg-black/5 blur-3xl" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_20%,rgba(123,224,174,0.16),transparent_30%),radial-gradient(circle_at_85%_80%,rgba(2,20,18,0.8),transparent_44%)]" />
+      <div className="absolute left-[-100px] top-[-100px] h-[280px] w-[280px] rounded-full border border-[#7BE0AE]/14" />
+      <div className="absolute bottom-[-120px] right-[-120px] h-[340px] w-[340px] rounded-full bg-[#7BE0AE]/8 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.65 }}
           >
-            <p className="mb-4 inline-flex rounded-full border border-[#7A1018]/20 bg-white px-5 py-2 text-sm font-semibold text-[#7A1018] shadow-sm">
+            <p className="mb-5 inline-flex rounded-full border border-[#7BE0AE]/25 bg-white/8 px-4 py-2 text-sm font-semibold text-[#BFF5DA] backdrop-blur">
               الفرصة التشغيلية
             </p>
 
-            <h2 className="max-w-3xl text-3xl font-bold leading-tight text-[#141111] md:text-5xl">
-              تحويل القيمة التراثية إلى نموذج ضيافة قابل للإيراد
+            <h2 className="max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.02em] text-white md:text-5xl">
+              مصادر الإيرادات في دار ضيافة بيت التحفيات
             </h2>
-
-            <p className="mt-6 max-w-3xl text-lg leading-9 text-[#625955]">
-              تستند الفرصة التشغيلية في بيت التحفيات إلى تحويل هوية المكان
-              وتاريخه إلى تجربة ضيافة يومية وموسمية. فالمشروع لا يعتمد على
-              تقديم الطعام فقط، بل على خلق بيئة مختلفة تجمع بين الذاكرة
-              البغدادية، الجلسات الخارجية، والضيافة ذات الطابع الثقافي.
-            </p>
           </motion.div>
 
-          <motion.div
+          <motion.p
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.65, delay: 0.15 }}
-            className="rounded-[2rem] border border-black/10 bg-white p-6 shadow-xl shadow-black/5"
+            transition={{ duration: 0.65, delay: 0.1 }}
+            className="max-w-3xl text-lg leading-9 text-white/68"
           >
-            <p className="mb-5 text-sm font-semibold text-[#7A1018]">
-              مؤشرات نوعية
-            </p>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              {indicators.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, scale: 0.94 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: 0.2 + index * 0.1 }}
-                  className="rounded-3xl bg-[#F8F6F2] p-5 text-center"
-                >
-                  <p className="text-3xl font-bold text-[#141111]">
-                    {item.value}
-                  </p>
-                  <p className="mt-2 text-sm text-[#625955]">{item.label}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+            تقوم الفرصة التشغيلية على تحويل القيمة التراثية للمكان إلى نموذج
+            تجاري متعدد الاستخدامات، يجمع بين التشغيل اليومي والحجوزات عالية
+            القيمة، بما يقلل الاعتماد على إيرادات الكافيه وحدها.
+          </motion.p>
         </div>
 
         <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {opportunities.map((item, index) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 26 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.55, delay: index * 0.08 }}
-              className="group relative overflow-hidden rounded-[2rem] border border-black/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10"
-            >
-              <div className="absolute left-0 top-0 h-24 w-24 rounded-br-[3rem] bg-[#7A1018] transition-all duration-300 group-hover:h-28 group-hover:w-28" />
+          {opportunities.map((item, index) => {
+            const Icon = item.icon;
 
-              <div className="relative">
-                <p className="mb-10 text-left text-3xl font-bold text-white">
-                  {item.metric}
-                </p>
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 26 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.55, delay: index * 0.08 }}
+                className="group rounded-[1.6rem] border border-white/10 bg-white/[0.06] p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#7BE0AE]/35 hover:bg-white/[0.09]"
+              >
+                <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-full bg-[#7BE0AE]/12 text-[#8BE7B5] transition-all duration-300 group-hover:bg-[#7BE0AE] group-hover:text-[#062F2C]">
+                  <Icon className="h-5 w-5" />
+                </div>
 
-                <h3 className="mb-4 text-2xl font-bold text-[#141111]">
+                <h3 className="text-xl font-semibold text-white">
                   {item.title}
                 </h3>
 
-                <p className="leading-8 text-[#625955]">{item.text}</p>
-              </div>
-            </motion.div>
-          ))}
+                <p className="mt-4 text-sm leading-7 text-white/58">
+                  {item.text}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
 
         <motion.div
@@ -128,21 +119,30 @@ export default function OperationalOpportunity() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.65 }}
-          className="mt-12 rounded-[2rem] bg-[#141111] p-8 text-white md:p-10"
+          className="mt-12 rounded-[2rem] border border-[#7BE0AE]/18 bg-[#7BE0AE]/10 p-6 backdrop-blur md:p-8"
         >
-          <div className="grid gap-8 md:grid-cols-[0.75fr_1.25fr] md:items-center">
-            <div>
-              <p className="text-sm text-[#E8D7C3]">الخلاصة التشغيلية</p>
-              <h3 className="mt-3 text-3xl font-bold leading-tight">
-                التميز هنا ليس في المنتج وحده، بل في المكان والانطباع.
-              </h3>
-            </div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {summary.map((item) => {
+              const Icon = item.icon;
 
-            <p className="leading-9 text-white/75">
-              هذا النوع من المشاريع يملك قابلية أعلى للتميّز مقارنة بالمشاريع
-              التقليدية، لأن قرار الزائر لا يقوم على السعر فقط، بل على التجربة،
-              الصورة، الذاكرة، وإحساس الخصوصية الذي يقدمه المكان.
-            </p>
+              return (
+                <div
+                  key={item.label}
+                  className="flex items-center gap-4 rounded-[1.3rem] border border-white/10 bg-[#052B28]/55 p-5"
+                >
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/8 text-[#8BE7B5]">
+                    <Icon className="h-5 w-5" />
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-white/45">{item.label}</p>
+                    <p className="mt-1 text-base font-semibold text-white">
+                      {item.value}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </motion.div>
       </div>

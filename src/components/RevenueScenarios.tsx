@@ -1,402 +1,383 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { animate, motion } from "framer-motion";
+import {
+  balancedScenario,
+  calculatedScenarios,
+  investorSharePercent,
+  monthlyOperatingCosts,
+  tableCount,
+} from "./feasibilityModel";
 
 const format = (value: number) =>
   new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 0,
   }).format(value);
 
-const tableCount = 40;
 const guestCapacity = 120;
 
-const monthlyFixedCosts = 23200;
-const foodCostRate = 0.35;
+function CountUp({
+  value,
+  suffix = "",
+}: {
+  value: number;
+  suffix?: string;
+}) {
+  const [displayValue, setDisplayValue] = useState(0);
 
-const revenueScenarios = [
-  {
-    name: "سيناريو محافظ",
-    averageTableSpend: 20,
-    tableTurnoverPerDay: 1.4,
-    operatingDays: 26,
-    note: "تشغيل حذر بمتوسط دفع منخفض، مناسب كبداية تشغيل أو أيام الحركة الهادئة.",
-  },
-  {
-    name: "سيناريو متوسط",
-    averageTableSpend: 35,
-    tableTurnoverPerDay: 1.8,
-    operatingDays: 28,
-    note: "تشغيل مستقر مع تحسن الإشغال ومتوسط صرف الطاولة وحركة جيدة في الجلسات.",
-  },
-  {
-    name: "سيناريو قوي",
-    averageTableSpend: 50,
-    tableTurnoverPerDay: 2,
-    operatingDays: 30,
-    note: "تشغيل مرتفع مع حجوزات منتظمة وتجربة ضيافة ذات تسعير أفضل.",
-  },
-];
+  useEffect(() => {
+    const controls = animate(0, value, {
+      duration: 1.25,
+      ease: "easeOut",
+      onUpdate: (latest) => setDisplayValue(Math.round(latest)),
+    });
 
-export default function RevenueScenarios() {
-  const breakEvenRevenue = monthlyFixedCosts / (1 - foodCostRate);
-  const breakEvenPerDay = breakEvenRevenue / 30;
-  const breakEvenPerTableMonthly = breakEvenRevenue / tableCount;
+    return () => controls.stop();
+  }, [value]);
 
   return (
-    <section
-      id="feasibility"
-      dir="rtl"
-      className="relative overflow-hidden bg-white px-5 py-20 md:px-10 md:py-28"
-    >
-      <div className="absolute left-0 top-0 h-[420px] w-[420px] rounded-br-[9rem] bg-[#7A1018]/10" />
-      <div className="absolute bottom-0 right-0 h-[360px] w-[360px] rounded-tl-[9rem] bg-black/[0.04]" />
+    <span>
+      {format(displayValue)}
+      {suffix}
+    </span>
+  );
+}
 
-      <div className="relative mx-auto max-w-7xl">
+export default function RevenueScenarios() {
+  return (
+    <section
+      id="revenue"
+      dir="rtl"
+      className="relative overflow-hidden bg-white py-20 md:py-24"
+    >
+      <div className="absolute left-[-120px] top-[-120px] h-[320px] w-[320px] rounded-full bg-[#7BE0AE]/18 blur-3xl" />
+      <div className="absolute bottom-[-140px] right-[-140px] h-[360px] w-[360px] rounded-full bg-[#063F3A]/8 blur-3xl" />
+
+      <div className="relative mx-auto max-w-[1600px] px-5 md:px-8">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.65 }}
+          >
+            <p className="mb-5 inline-flex rounded-full border border-[#063F3A]/15 bg-[#F7F4EE] px-4 py-2 text-sm font-semibold text-[#063F3A]">
+              الإيرادات والربحية
+            </p>
+
+            <h2 className="max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.02em] text-[#092E2A] md:text-5xl">
+              صافي الربح وحصة المستثمر بعد خصم كل المصاريف
+            </h2>
+
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-[#5F6B67]">
+              يوضح الجدول إيرادات الطاولات حسب معدل الطاولة ودورانها وأيام
+              التشغيل الفعلية، مع خصم أيام الحجز الخاص من التشغيل اليومي لدار الضيافة واحتسابها
+              ضمن الإيرادات المساندة.
+            </p>
+          </motion.div>
+
+          <div className="grid gap-4 sm:grid-cols-4">
+            <IndicatorCard
+              label="عدد الطاولات"
+              value={tableCount}
+              suffix=" طاولة"
+            />
+            <IndicatorCard
+              label="الاستيعاب"
+              value={guestCapacity}
+              suffix=" شخص"
+            />
+            <IndicatorCard
+              label="المصاريف التشغيلية"
+              value={monthlyOperatingCosts}
+              suffix="$"
+            />
+            <IndicatorCard
+              label="حصة المستثمر المتوازنة"
+              value={balancedScenario.investorMonthlyShare}
+              suffix="$"
+            />
+          </div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 26 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.65 }}
+          className="mt-12 overflow-hidden rounded-[1.8rem] border border-[#063F3A]/10 bg-white shadow-xl shadow-[#063F3A]/5"
+        >
+          <div className="border-b border-[#063F3A]/10 bg-[#063F3A] px-5 py-4 text-white">
+            <h3 className="text-xl font-semibold">جدول السيناريوهات المالية</h3>
+            <p className="mt-1 text-sm text-white/55">
+              صافي الربح = إجمالي الإيراد − خصم المواد والتهيئة − المصاريف التشغيلية
+            </p>
+          </div>
+
+          <div className="hidden xl:block">
+            <table className="w-full table-fixed border-collapse text-right">
+              <thead>
+                <tr className="border-b border-[#063F3A]/10 bg-[#F7F4EE]">
+                  <th className="w-[12%] p-4 text-sm font-semibold text-[#64716C]">
+                    السيناريو
+                  </th>
+                  <th className="w-[7%] p-4 text-sm font-semibold text-[#64716C]">
+                    معدل الطاولة
+                  </th>
+                  <th className="w-[7%] p-4 text-sm font-semibold text-[#64716C]">
+                    دوران يومي
+                  </th>
+                  <th className="w-[7%] p-4 text-sm font-semibold text-[#64716C]">
+                    أيام دار الضيافة
+                  </th>
+                  <th className="w-[7%] p-4 text-sm font-semibold text-[#64716C]">
+                    أيام الحجز
+                  </th>
+                  <th className="w-[10%] p-4 text-sm font-semibold text-[#64716C]">
+                    إيراد الطاولات
+                  </th>
+                  <th className="w-[9%] p-4 text-sm font-semibold text-[#64716C]">
+                    إيرادات مساندة
+                  </th>
+                  <th className="w-[10%] p-4 text-sm font-semibold text-[#64716C]">
+                    إجمالي الإيراد
+                  </th>
+                  <th className="w-[10%] p-4 text-sm font-semibold text-[#64716C]">
+                    خصم المواد والتهيئة
+                  </th>
+                  <th className="w-[9%] p-4 text-sm font-semibold text-[#64716C]">
+                    مصاريف تشغيلية
+                  </th>
+                  <th className="w-[6%] p-4 text-sm font-semibold text-[#64716C]">
+                    صافي الربح
+                  </th>
+                  <th className="w-[6%] p-4 text-sm font-semibold text-[#64716C]">
+                    حصة المستثمر
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {calculatedScenarios.map((row, index) => {
+                  const barValue = Math.min((row.netProfit / 65000) * 100, 100);
+
+                  return (
+                    <motion.tr
+                      key={row.name}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.38, delay: index * 0.06 }}
+                      className="border-b border-[#063F3A]/10 transition-colors hover:bg-[#F7F4EE]"
+                    >
+                      <td className="p-4">
+                        <p className="font-semibold text-[#092E2A]">
+                          {row.name}
+                        </p>
+                        <p className="mt-1 text-xs leading-5 text-[#64716C]">
+                          {row.revenueDescription}
+                        </p>
+                      </td>
+
+                      <td className="p-4 font-semibold text-[#063F3A]">
+                        {format(row.averageTableSpend)}$
+                      </td>
+
+                      <td className="p-4 font-semibold text-[#092E2A]">
+                        {row.tableTurnoverPerDay} مرة
+                      </td>
+
+                      <td className="p-4 font-semibold text-[#092E2A]">
+                        {row.hospitalityOperatingDays} يوم
+                      </td>
+
+                      <td className="p-4 font-semibold text-[#9B2C2C]">
+                        {row.eventClosedDays} يوم
+                      </td>
+
+                      <td className="p-4">
+                        <p className="font-semibold text-[#092E2A]">
+                          {format(row.tableRevenue)}$
+                        </p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#64716C]">
+                          40 × {format(row.averageTableSpend)} ×{" "}
+                          {row.tableTurnoverPerDay} ×{" "}
+                          {row.hospitalityOperatingDays}
+                        </p>
+                      </td>
+
+                      <td className="p-4 font-semibold text-[#063F3A]">
+                        {format(row.supportRevenue)}$
+                      </td>
+
+                      <td className="p-4 font-semibold text-[#092E2A]">
+                        {format(row.totalRevenue)}$
+                      </td>
+
+                      <td className="p-4">
+                        <p className="font-semibold text-[#9B2C2C]">
+                          {format(row.directCosts)}$
+                        </p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#64716C]">
+                          35% مواد ضيافة + 20% تهيئة حجوزات
+                        </p>
+                      </td>
+
+                      <td className="p-4">
+                        <p className="font-semibold text-[#9B2C2C]">
+                          {format(monthlyOperatingCosts)}$
+                        </p>
+                        <p className="mt-1 text-[11px] leading-5 text-[#64716C]">
+                          رواتب، كهرباء، خدمات، صيانة، تسويق، إيجار
+                        </p>
+                      </td>
+
+                      <td className="p-4">
+                        <p className="text-lg font-semibold text-[#063F3A]">
+                          {format(row.netProfit)}$
+                        </p>
+
+                        <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#063F3A]/10">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${Math.max(barValue, 4)}%` }}
+                            viewport={{ once: true }}
+                            transition={{
+                              duration: 0.9,
+                              delay: 0.15 + index * 0.08,
+                            }}
+                            className="h-full rounded-full bg-[#7BE0AE]"
+                          />
+                        </div>
+
+                        <p className="mt-1 text-[11px] text-[#64716C]">
+                          {format(row.dailyNetProfit)}$ يوميًا
+                        </p>
+                      </td>
+
+                      <td className="p-4">
+                        <p className="text-lg font-semibold text-[#092E2A]">
+                          {format(row.investorMonthlyShare)}$
+                        </p>
+                        <p className="mt-1 text-[11px] text-[#64716C]">
+                          {investorSharePercent}% من الصافي
+                        </p>
+                      </td>
+                    </motion.tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="grid gap-4 p-4 xl:hidden">
+            {calculatedScenarios.map((row, index) => (
+              <motion.div
+                key={row.name}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.38, delay: index * 0.05 }}
+                className="rounded-[1.4rem] border border-[#063F3A]/10 bg-[#F7F4EE] p-5"
+              >
+                <h4 className="text-lg font-semibold text-[#092E2A]">
+                  {row.name}
+                </h4>
+
+                <p className="mt-1 text-sm leading-6 text-[#64716C]">
+                  {row.revenueDescription}
+                </p>
+
+                <div className="mt-5 grid gap-3">
+                  <MobileRow
+                    label="معدل الطاولة"
+                    value={`${format(row.averageTableSpend)}$`}
+                  />
+                  <MobileRow
+                    label="دوران الطاولة يوميًا"
+                    value={`${row.tableTurnoverPerDay} مرة`}
+                  />
+                  <MobileRow
+                    label="أيام التشغيل اليومي لدار الضيافة"
+                    value={`${row.hospitalityOperatingDays} يوم`}
+                  />
+                  <MobileRow
+                    label="أيام الحجز الخاص"
+                    value={`${row.eventClosedDays} يوم`}
+                  />
+                  <MobileRow
+                    label="إيراد الطاولات"
+                    value={`${format(row.tableRevenue)}$`}
+                  />
+                  <MobileRow
+                    label="إيرادات مساندة"
+                    value={`${format(row.supportRevenue)}$`}
+                  />
+                  <MobileRow
+                    label="إجمالي الإيراد"
+                    value={`${format(row.totalRevenue)}$`}
+                  />
+                  <MobileRow
+                    label="خصم المواد والتهيئة"
+                    value={`${format(row.directCosts)}$`}
+                  />
+                  <MobileRow
+                    label="المصاريف التشغيلية"
+                    value={`${format(monthlyOperatingCosts)}$`}
+                  />
+                  <MobileRow
+                    label="صافي الربح"
+                    value={`${format(row.netProfit)}$`}
+                    highlight
+                  />
+                  <MobileRow
+                    label="صافي يومي"
+                    value={`${format(row.dailyNetProfit)}$`}
+                  />
+                  <MobileRow
+                    label={`حصة المستثمر ${investorSharePercent}%`}
+                    value={`${format(row.investorMonthlyShare)}$`}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.65 }}
-          className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end"
+          className="mt-8 rounded-[1.8rem] bg-[#063F3A] p-7 text-white"
         >
-          <div>
-            <p className="mb-4 inline-flex rounded-full border border-[#7A1018]/20 bg-[#F8F6F2] px-5 py-2 text-sm font-semibold text-[#7A1018]">
-              الإيرادات ونقطة التعادل
+          <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold text-[#9EF0C2]">
+                طريقة الاحتساب
+              </p>
+
+              <h3 className="mt-3 text-3xl font-semibold leading-tight">
+                صافي الربح يظهر بعد خصم كل المصاريف
+              </h3>
+            </div>
+
+            <p className="leading-8 text-white/66">
+              يتم احتساب إيراد الطاولات وفق عدد الطاولات ومعدل الطاولة ودورانها
+              وأيام التشغيل اليومي لدار الضيافة فقط. أما يوم الحجز الخاص فتتوقف فيه خدمة الكافيه
+              ويُحسب ضمن الإيرادات المساندة. بعدها تُخصم كلفة مواد الضيافة،
+              كلفة تهيئة الحجوزات، والمصاريف التشغيلية الشهرية، ثم تُحسب حصة
+              المستثمر بنسبة {investorSharePercent}% من صافي أرباح الكافيه والحجوزات والفعاليات.
             </p>
-
-            <h2 className="max-w-3xl text-3xl font-bold leading-tight text-[#141111] md:text-5xl">
-              الإيراد يعتمد على 40 طاولة ومتوسط دفع يتراوح بين 18 و50 دولارًا
-            </h2>
-
-          <p className="mt-6 max-w-3xl text-lg leading-9 text-[#625955]">
-  تعتمد الإيرادات المتوقعة على تشغيل 40 طاولة بطاقة استيعابية تقارب 120
-  شخصًا، مع احتساب متوسط صرف الطاولة ومعدل دورانها اليومي. وبناءً على كلفة
-  تشغيلية شهرية ثابتة مقدارها 23,200 دولار وكلفة مواد تقديرية بنسبة 35%،
-  يتم تحديد مستوى المبيعات المطلوب للوصول إلى نقطة التعادل.
-</p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard label="عدد الطاولات" value={tableCount} suffix="طاولة" />
-            <StatCard label="الاستيعاب الكلي" value={guestCapacity} suffix="شخص" />
-            <StatCard
-              label="المصاريف الشهرية"
-              value={monthlyFixedCosts}
-              suffix="$"
-            />
-            <StatCard
-              label="نقطة التعادل"
-              value={Math.ceil(breakEvenRevenue)}
-              suffix="$"
-            />
           </div>
         </motion.div>
-
-        <div className="mt-14 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.65 }}
-            className="rounded-[2rem] bg-[#141111] p-7 text-white shadow-2xl shadow-black/20"
-          >
-            <p className="text-sm font-semibold text-[#B5121B]">
-              الطاقة التشغيلية
-            </p>
-
-            <h3 className="mt-3 text-3xl font-bold leading-tight">
-              40 طاولة بطاقة استيعابية تقارب 120 شخصًا
-            </h3>
-
-            <p className="mt-5 leading-8 text-white/60">
-              هذا الرقم يمثل الطاقة التشغيلية المعتمدة في الدراسة. الإيراد
-              الفعلي لا يعتمد على عدد الطاولات فقط، بل على عدد مرات إشغال الطاولة
-              خلال اليوم، ومتوسط الدفع لكل طاولة.
-            </p>
-
-            <div className="mt-8 grid gap-4">
-              <CapacityRow label="عدد الطاولات" value="40" suffix="طاولة" />
-              <CapacityRow label="الاستيعاب" value="120" suffix="شخص" />
-              <CapacityRow label="متوسط الأشخاص للطاولة" value="3" suffix="أشخاص" />
-              <CapacityRow label="متوسط الدفع المعتمد" value="18–50" suffix="$" />
-            </div>
-
-            <div className="mt-8 rounded-[1.5rem] border border-[#B5121B]/40 bg-[#B5121B]/15 p-5">
-              <p className="text-sm font-semibold text-white">
-                قراءة مهمة
-              </p>
-
-             <p className="mt-3 leading-8 text-white/65">
-  يبدأ صافي التشغيل الإيجابي بالظهور عند الوصول إلى متوسط دفع أعلى ومعدل دوران
-  منتظم للطاولات، مع تحسن واضح في النتائج ضمن السيناريو المتوسط والسيناريو
-  القوي.
-</p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.65 }}
-            className="overflow-hidden rounded-[2rem] border border-black/10 bg-white shadow-xl shadow-black/5"
-          >
-            <div className="bg-[#7A1018] px-6 py-5 text-white">
-              <h3 className="text-2xl font-bold">جدول سيناريوهات الإيراد</h3>
-              <p className="mt-2 text-sm text-white/70">
-                الإيراد محسوب على أساس 40 طاولة وكلفة مواد تقديرية 35%
-              </p>
-            </div>
-
-            <div className="hidden lg:block">
-              <table className="w-full table-fixed border-collapse text-right">
-                <thead>
-                  <tr className="border-b border-black/10 bg-[#F8F6F2]">
-                    <th className="w-[18%] p-5 text-sm font-bold text-[#625955]">
-                      السيناريو
-                    </th>
-                    <th className="w-[14%] p-5 text-sm font-bold text-[#625955]">
-                      دفع الطاولة
-                    </th>
-                    <th className="w-[14%] p-5 text-sm font-bold text-[#625955]">
-                      دوران يومي
-                    </th>
-                    <th className="w-[14%] p-5 text-sm font-bold text-[#625955]">
-                      أيام التشغيل
-                    </th>
-                    <th className="w-[16%] p-5 text-sm font-bold text-[#625955]">
-                      الإيراد الشهري
-                    </th>
-                    <th className="w-[14%] p-5 text-sm font-bold text-[#625955]">
-                      صافي التشغيل
-                    </th>
-                    <th className="w-[10%] p-5 text-sm font-bold text-[#625955]">
-                      الحالة
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {revenueScenarios.map((row, index) => {
-                    const monthlyRevenue =
-                      tableCount *
-                      row.averageTableSpend *
-                      row.tableTurnoverPerDay *
-                      row.operatingDays;
-
-                    const foodCost = monthlyRevenue * foodCostRate;
-                    const netBeforeDistribution =
-                      monthlyRevenue - foodCost - monthlyFixedCosts;
-
-                    const isProfitable = netBeforeDistribution > 0;
-
-                    const barValue = Math.min(
-                      (monthlyRevenue / (breakEvenRevenue * 2)) * 100,
-                      100
-                    );
-
-                    return (
-                      <motion.tr
-                        key={row.name}
-                        initial={{ opacity: 0, y: 12 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.45, delay: index * 0.06 }}
-                        className="border-b border-black/10 hover:bg-[#F8F6F2]"
-                      >
-                        <td className="p-5">
-                          <p className="font-black text-[#141111]">{row.name}</p>
-                          <p className="mt-1 text-xs leading-6 text-[#625955]">
-                            {row.note}
-                          </p>
-                        </td>
-
-                        <td className="p-5 font-bold text-[#141111]">
-                          {format(row.averageTableSpend)}$
-                        </td>
-
-                        <td className="p-5 font-bold text-[#141111]">
-                          {row.tableTurnoverPerDay} مرة
-                        </td>
-
-                        <td className="p-5 font-bold text-[#141111]">
-                          {row.operatingDays} يوم
-                        </td>
-
-                        <td className="p-5">
-                          <div className="mb-2 text-xl font-black text-[#141111]">
-                            {format(monthlyRevenue)}$
-                          </div>
-
-                          <div className="h-2 overflow-hidden rounded-full bg-black/10">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${barValue}%` }}
-                              viewport={{ once: true }}
-                              transition={{
-                                duration: 0.9,
-                                delay: 0.15 + index * 0.08,
-                              }}
-                              className="h-full rounded-full bg-[#7A1018]"
-                            />
-                          </div>
-                        </td>
-
-                        <td
-                          className={`p-5 text-xl font-black ${
-                            isProfitable ? "text-[#141111]" : "text-[#7A1018]"
-                          }`}
-                        >
-                          {format(netBeforeDistribution)}$
-                        </td>
-
-                        <td className="p-5">
-                          <span
-                            className={`inline-flex rounded-full px-4 py-2 text-xs font-bold ${
-                              isProfitable
-                                ? "bg-black text-white"
-                                : "bg-[#7A1018]/10 text-[#7A1018]"
-                            }`}
-                          >
-                            {isProfitable ? "مربح" : "دون التعادل"}
-                          </span>
-                        </td>
-                      </motion.tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="grid gap-4 p-5 lg:hidden">
-              {revenueScenarios.map((row, index) => {
-                const monthlyRevenue =
-                  tableCount *
-                  row.averageTableSpend *
-                  row.tableTurnoverPerDay *
-                  row.operatingDays;
-
-                const foodCost = monthlyRevenue * foodCostRate;
-                const netBeforeDistribution =
-                  monthlyRevenue - foodCost - monthlyFixedCosts;
-
-                const isProfitable = netBeforeDistribution > 0;
-
-                return (
-                  <motion.div
-                    key={row.name}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: index * 0.06 }}
-                    className="rounded-[1.5rem] border border-black/10 bg-[#F8F6F2] p-5"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h4 className="text-xl font-black text-[#141111]">
-                          {row.name}
-                        </h4>
-                        <p className="mt-1 text-sm leading-6 text-[#625955]">
-                          {row.note}
-                        </p>
-                      </div>
-
-                      <span
-                        className={`min-w-fit rounded-full px-4 py-2 text-xs font-bold ${
-                          isProfitable
-                            ? "bg-black text-white"
-                            : "bg-[#7A1018]/10 text-[#7A1018]"
-                        }`}
-                      >
-                        {isProfitable ? "مربح" : "دون التعادل"}
-                      </span>
-                    </div>
-
-                    <div className="mt-5 grid gap-3">
-                      <MobileRow label="متوسط دفع الطاولة" value={`${format(row.averageTableSpend)}$`} />
-                      <MobileRow label="دوران الطاولة يوميًا" value={`${row.tableTurnoverPerDay} مرة`} />
-                      <MobileRow label="أيام التشغيل" value={`${row.operatingDays} يوم`} />
-                      <MobileRow label="الإيراد الشهري" value={`${format(monthlyRevenue)}$`} highlight />
-                      <MobileRow label="صافي التشغيل" value={`${format(netBeforeDistribution)}$`} />
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-        </div>
-
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.65 }}
-            className="rounded-[2rem] bg-[#7A1018] p-7 text-white lg:col-span-1"
-          >
-            <p className="text-sm text-white/70">نقطة التعادل الشهرية</p>
-
-            <p className="mt-3 text-5xl font-black">
-              {format(Math.ceil(breakEvenRevenue))}
-              <span className="mr-1 text-xl text-white/70">$</span>
-            </p>
-
-            <p className="mt-5 leading-8 text-white/75">
-              هذا هو مستوى المبيعات الشهري التقريبي المطلوب لتغطية المصاريف
-              الثابتة وكلفة المواد، قبل احتساب أي توزيع أرباح.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.65, delay: 0.1 }}
-            className="rounded-[2rem] bg-[#141111] p-7 text-white lg:col-span-2"
-          >
-            <p className="text-sm font-semibold text-[#B5121B]">
-              القراءة المالية
-            </p>
-
-            <h3 className="mt-3 text-3xl font-bold leading-tight">
-              الكلفة التشغيلية الجديدة تجعل نقطة التعادل أكثر واقعية
-            </h3>
-
-            <p className="mt-5 leading-9 text-white/65">
-              مع 40 طاولة ومصاريف شهرية ثابتة تقارب 23,200 دولار، يصبح الوصول
-              إلى نقطة التعادل ممكنًا عند مبيعات شهرية تقارب 35,700 دولار. لذلك
-              يكون السيناريو المتوسط وما فوق هو المسار الأفضل لبناء ربح تشغيلي
-              مستقر.
-            </p>
-
-            <div className="mt-7 grid gap-4 sm:grid-cols-3">
-              <MiniIndicator title="الطاقة التشغيلية" value="40 طاولة" />
-              <MiniIndicator title="الاستيعاب" value="120 شخص" />
-              <MiniIndicator
-                title="تعادل يومي تقريبي"
-                value={`${format(Math.ceil(breakEvenPerDay))}$`}
-              />
-            </div>
-
-            <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-white/10 p-5">
-              <p className="text-sm text-white/50">تعادل شهري لكل طاولة</p>
-              <p className="mt-2 text-2xl font-black">
-                {format(Math.ceil(breakEvenPerTableMonthly))}
-                <span className="mr-1 text-sm text-[#B5121B]">$</span>
-              </p>
-              <p className="mt-3 leading-7 text-white/60">
-                كل طاولة تحتاج أن تحقق هذا المعدل شهريًا تقريبًا حتى يلامس
-                المشروع نقطة التعادل.
-              </p>
-            </div>
-          </motion.div>
-        </div>
       </div>
     </section>
   );
 }
 
-function StatCard({
+function IndicatorCard({
   label,
   value,
   suffix,
@@ -407,40 +388,18 @@ function StatCard({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className="rounded-[2rem] bg-[#141111] p-6 text-white shadow-xl shadow-black/10"
+      transition={{ duration: 0.45 }}
+      className="rounded-[1.3rem] border border-[#063F3A]/10 bg-[#F7F4EE] p-5"
     >
-      <p className="text-sm text-white/55">{label}</p>
-      <p className="mt-3 text-4xl font-black">
-        {typeof value === "number" && value % 1 !== 0
-          ? value.toFixed(1)
-          : format(value)}
-        <span className="mr-1 text-base text-[#B5121B]">{suffix}</span>
+      <p className="text-sm leading-6 text-[#64716C]">{label}</p>
+
+      <p className="mt-3 text-2xl font-semibold text-[#092E2A] md:text-3xl">
+        <CountUp value={value} suffix={suffix} />
       </p>
     </motion.div>
-  );
-}
-
-function CapacityRow({
-  label,
-  value,
-  suffix,
-}: {
-  label: string;
-  value: string;
-  suffix: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/10 p-4">
-      <span className="text-sm text-white/60">{label}</span>
-      <span className="text-xl font-black text-white">
-        {value}
-        <span className="mr-1 text-sm text-[#B5121B]">{suffix}</span>
-      </span>
-    </div>
   );
 }
 
@@ -456,22 +415,13 @@ function MobileRow({
   return (
     <div
       className={`flex items-center justify-between gap-4 rounded-2xl p-3 ${
-        highlight ? "bg-[#7A1018] text-white" : "bg-white"
+        highlight ? "bg-[#063F3A] text-white" : "bg-white"
       }`}
     >
-      <span className={highlight ? "text-white/70" : "text-[#625955]"}>
+      <span className={highlight ? "text-white/65" : "text-[#64716C]"}>
         {label}
       </span>
-      <span className="font-black">{value}</span>
-    </div>
-  );
-}
-
-function MiniIndicator({ title, value }: { title: string; value: string }) {
-  return (
-    <div className="rounded-[1.5rem] border border-white/10 bg-white/10 p-5">
-      <p className="text-sm text-white/50">{title}</p>
-      <p className="mt-2 text-lg font-bold text-white">{value}</p>
+      <span className="font-semibold text-left">{value}</span>
     </div>
   );
 }

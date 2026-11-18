@@ -1,41 +1,71 @@
 "use client";
 
-import { motion } from "framer-motion";
-
-const highlights = [
-  "بيت التحفيات يمتلك قيمة تراثية وتجارية جاهزة يمكن تحويلها إلى تجربة ضيافة مختلفة.",
-  "الطاقة التشغيلية المقدّرة بـ 40 طاولة وباستيعاب يقارب 120 شخصًا تمنح المشروع قابلية جيدة للإيراد عند إدارة الإشغال بشكل صحيح.",
-  "الأرقام توضح أن نجاح المشروع يعتمد على ضبط المصاريف، معدل دوران الطاولات، ومتوسط صرف الزائر.",
-];
-
-const annualPartnerRevenue = [
-  { year: "السنة 1", revenue: 108787 },
-  { year: "السنة 2", revenue: 117490 },
-  { year: "السنة 3", revenue: 126889 },
-  { year: "السنة 4", revenue: 137040 },
-  { year: "السنة 5", revenue: 148003 },
-];
+import { useEffect, useState } from "react";
+import { animate, motion } from "framer-motion";
+import { FileText } from "lucide-react";
+import {
+  balancedScenario,
+  capitalRefund,
+  investmentAmount,
+  monthlyOperatingCosts,
+} from "./feasibilityModel";
 
 const format = (value: number) =>
   new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 0,
   }).format(value);
 
+const { investorMonthlyShare, investorAnnualShare } = balancedScenario;
+
+const annualPartnerRevenue = [
+  { year: "السنة 1", revenue: investorAnnualShare },
+  { year: "السنة 2", revenue: investorAnnualShare * 1.08 },
+];
+
+function CountUp({
+  value,
+  suffix = "",
+}: {
+  value: number;
+  suffix?: string;
+}) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    const controls = animate(0, value, {
+      duration: 1.25,
+      ease: "easeOut",
+      onUpdate: (latest) => setDisplayValue(latest),
+    });
+
+    return () => controls.stop();
+  }, [value]);
+
+  return (
+    <span>
+      {format(Math.round(displayValue))}
+      {suffix}
+    </span>
+  );
+}
+
 export default function SimpleConclusion() {
-  const totalFiveYears = annualPartnerRevenue.reduce(
+  const totalAgreementProfit = annualPartnerRevenue.reduce(
     (sum, item) => sum + item.revenue,
     0
   );
+
+  const maxRevenue = Math.max(...annualPartnerRevenue.map((item) => item.revenue));
 
   return (
     <>
       <section
         id="conclusion"
         dir="rtl"
-        className="relative overflow-hidden bg-[#F8F6F2] px-5 py-20 text-[#141111] md:px-10 md:py-28"
+        className="relative overflow-hidden bg-[#F7F4EE] px-5 py-20 text-[#092E2A] md:px-10 md:py-24"
       >
-        <div className="absolute right-0 top-0 h-[360px] w-[360px] rounded-bl-[8rem] bg-[#7A1018]/10" />
-        <div className="absolute bottom-0 left-0 h-[320px] w-[320px] rounded-tr-[8rem] bg-black/[0.04]" />
+        <div className="absolute left-[-120px] top-[-120px] h-[320px] w-[320px] rounded-full bg-[#7BE0AE]/20 blur-3xl" />
+        <div className="absolute bottom-[-140px] right-[-140px] h-[360px] w-[360px] rounded-full bg-[#063F3A]/8 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl">
           <motion.div
@@ -45,38 +75,44 @@ export default function SimpleConclusion() {
             transition={{ duration: 0.65 }}
             className="mx-auto max-w-4xl text-center"
           >
-            <p className="mb-4 inline-flex rounded-full border border-[#7A1018]/20 bg-white px-5 py-2 text-sm font-semibold text-[#7A1018] shadow-sm">
+            <p className="mb-5 inline-flex rounded-full border border-[#063F3A]/15 bg-white px-4 py-2 text-sm font-semibold text-[#063F3A] shadow-sm">
               الخلاصة
             </p>
 
-            <h2 className="text-3xl font-bold leading-tight md:text-5xl">
-              بيت التحفيات فرصة تشغيلية قائمة على الهوية والمكان والأرقام
+            <h2 className="text-4xl font-semibold leading-tight tracking-[-0.02em] md:text-5xl">
+              جدوى تشغيل دار ضيافة بيت التحفيات خلال سنتين
             </h2>
 
-            <p className="mt-6 text-lg leading-9 text-[#625955]">
-              تشير الدراسة إلى أن المشروع قابل للتحول إلى وجهة ضيافة ذات عائد
-              مستمر عند تشغيله بمنهجية واضحة، تجمع بين قوة المكان التراثية
-              والانضباط المالي والتسويق المستمر.
+            <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-[#5F6B67]">
+              تعتمد جدوى المشروع على تحويل الهوية التراثية إلى إشغال فعلي،
+              مع ضبط المصاريف، معدل صرف الطاولة، والحجوزات الخاصة.
             </p>
           </motion.div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {highlights.map((item, index) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.55, delay: index * 0.08 }}
-                className="rounded-[2rem] border border-black/10 bg-white p-6 shadow-sm"
-              >
-                <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#7A1018] text-sm font-black text-white">
-                  {index + 1}
-                </div>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <MetricCard
+              label="رأس المال"
+              value={investmentAmount}
+              suffix="$"
+            />
 
-                <p className="leading-8 text-[#3f3834]">{item}</p>
-              </motion.div>
-            ))}
+            <MetricCard
+              label="المصاريف الشهرية"
+              value={monthlyOperatingCosts}
+              suffix="$"
+            />
+
+            <MetricCard
+              label="حصة المستثمر الشهرية"
+              value={investorMonthlyShare}
+              suffix="$"
+            />
+
+            <MetricCard
+              label="مبلغ الرد بعد سنتين"
+              value={capitalRefund}
+              suffix="$"
+            />
           </div>
 
           <motion.div
@@ -84,249 +120,187 @@ export default function SimpleConclusion() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7 }}
-            className="mt-14 overflow-hidden rounded-[2.5rem] bg-[#111010] text-white shadow-2xl shadow-black/20"
+            className="mt-10 overflow-hidden rounded-[1.8rem] border border-[#063F3A]/10 bg-white shadow-xl shadow-[#063F3A]/5"
           >
-            <div className="grid gap-8 border-b border-white/10 p-7 md:p-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+            <div className="grid gap-6 border-b border-[#063F3A]/10 bg-[#063F3A] p-6 text-white lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
               <div>
-                <p className="mb-4 inline-flex rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white/75">
-                  توقعات العائد السنوي
+                <p className="text-sm font-semibold text-[#9EF0C2]">
+                  جدول بياني مختصر
                 </p>
 
-                <h3 className="text-3xl font-black leading-tight md:text-4xl">
-                  مسار الإيراد السنوي المتوقع للشريك خلال أول 5 سنوات
+                <h3 className="mt-3 text-3xl font-semibold leading-tight">
+                  حصة المستثمر المتوقعة من الأرباح خلال سنتين
                 </h3>
-
-                <p className="mt-5 leading-8 text-white/60">
-                  يوضح المؤشر مسار نمو حصة الشريك السنوية وفق السيناريو المتوسط،
-                  مع افتراض تحسن تدريجي في الإشغال، الحجوزات، ومتوسط صرف
-                  الطاولة.
+                <p className="mt-3 text-sm leading-6 text-white/65">
+                  وفق سيناريو التشغيل المتوازن وزيادة تقديرية قدرها 8% في السنة الثانية.
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
-                  <p className="text-sm text-white/50">إجمالي أول 5 سنوات</p>
-
-                  <p className="mt-3 text-4xl font-black">
-                    {format(totalFiveYears)}
-                    <span className="mr-1 text-base text-[#B5121B]">$</span>
+                <div className="rounded-[1.3rem] border border-white/10 bg-white/8 p-5">
+                  <p className="text-sm text-white/55">إجمالي الأرباح خلال سنتين</p>
+                  <p className="mt-3 text-3xl font-semibold">
+                    <CountUp value={totalAgreementProfit} suffix="$" />
                   </p>
                 </div>
 
-                <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6">
-                  <p className="text-sm text-white/50">متوسط سنوي تقريبي</p>
-
-                  <p className="mt-3 text-4xl font-black">
-                    {format(totalFiveYears / annualPartnerRevenue.length)}
-                    <span className="mr-1 text-base text-[#B5121B]">$</span>
+                <div className="rounded-[1.3rem] border border-white/10 bg-white/8 p-5">
+                  <p className="text-sm text-white/55">متوسط سنوي</p>
+                  <p className="mt-3 text-3xl font-semibold">
+                    <CountUp
+                      value={totalAgreementProfit / annualPartnerRevenue.length}
+                      suffix="$"
+                    />
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="p-7 md:p-10">
-              <div className="relative mx-auto max-w-6xl">
-                <div className="hidden md:block">
-                  <div className="absolute right-0 top-[104px] h-1 w-full rounded-full bg-white/10" />
+            <div className="p-6 md:p-8">
+              <div className="hidden min-h-[340px] items-end gap-5 md:flex">
+                {annualPartnerRevenue.map((item, index) => {
+                  const height = (item.revenue / maxRevenue) * 100;
 
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "100%" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.4, ease: "easeOut" }}
-                    className="absolute right-0 top-[104px] h-1 rounded-full bg-[#B5121B]"
-                  />
+                  return (
+                    <motion.div
+                      key={item.year}
+                      initial={{ opacity: 0, y: 24 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.08 }}
+                      className="flex flex-1 flex-col items-center justify-end gap-4"
+                    >
+                      <div className="text-center">
+                        <p className="text-sm text-[#64716C]">{item.year}</p>
 
-                  <div className="relative grid grid-cols-5 gap-4">
-                    {annualPartnerRevenue.map((item, index) => {
-                      const previous =
-                        index === 0
-                          ? annualPartnerRevenue[0].revenue
-                          : annualPartnerRevenue[index - 1].revenue;
+                        <p className="mt-2 text-xl font-semibold text-[#092E2A]">
+                          {format(item.revenue)}$
+                        </p>
+                      </div>
 
-                      const growth =
-                        index === 0
-                          ? 0
-                          : ((item.revenue - previous) / previous) * 100;
-
-                      const isLast = index === annualPartnerRevenue.length - 1;
-
-                      return (
+                      <div className="flex h-[210px] w-full items-end rounded-[1.2rem] bg-[#F7F4EE] p-2">
                         <motion.div
-                          key={item.year}
-                          initial={{ opacity: 0, y: 24 }}
-                          whileInView={{ opacity: 1, y: 0 }}
+                          initial={{ height: 0 }}
+                          whileInView={{ height: `${height}%` }}
                           viewport={{ once: true }}
-                          transition={{ duration: 0.55, delay: index * 0.12 }}
-                          className="relative flex min-h-[250px] flex-col items-center justify-between text-center"
-                        >
-                          <div>
-                            <p className="text-sm text-white/45">
-                              {item.year}
-                            </p>
+                          transition={{
+                            duration: 1,
+                            delay: 0.2 + index * 0.08,
+                            ease: "easeOut",
+                          }}
+                          className="w-full rounded-[1rem] bg-[#063F3A]"
+                        />
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
 
-                            <p className="mt-2 text-2xl font-black">
-                              {format(item.revenue)}
-                              <span className="mr-1 text-sm text-[#B5121B]">
-                                $
-                              </span>
-                            </p>
-                          </div>
+              <div className="grid gap-4 md:hidden">
+                {annualPartnerRevenue.map((item, index) => (
+                  <motion.div
+                    key={item.year}
+                    initial={{ opacity: 0, y: 18 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: index * 0.08 }}
+                    className="rounded-[1.3rem] bg-[#F7F4EE] p-4"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-semibold text-[#092E2A]">
+                        {item.year}
+                      </p>
 
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{
-                              duration: 0.45,
-                              delay: 0.55 + index * 0.12,
-                              ease: "easeOut",
-                            }}
-                            className={`relative z-10 flex h-14 w-14 items-center justify-center rounded-full border ${
-                              isLast
-                                ? "border-[#B5121B] bg-[#B5121B] shadow-lg shadow-[#B5121B]/30"
-                                : "border-white/15 bg-[#1d1d1d]"
-                            }`}
-                          >
-                            <span className="h-3 w-3 rounded-full bg-white" />
-                          </motion.div>
+                      <p className="font-semibold text-[#063F3A]">
+                        {format(item.revenue)}$
+                      </p>
+                    </div>
 
-                          <div className="h-16">
-                            <p
-                              className={`rounded-full px-4 py-2 text-xs font-bold ${
-                                isLast
-                                  ? "bg-[#B5121B] text-white"
-                                  : "bg-white/10 text-white/60"
-                              }`}
-                            >
-                              {index === 0
-                                ? "سنة الأساس"
-                                : `نمو +${growth.toFixed(1)}%`}
-                            </p>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="grid gap-4 md:hidden">
-                  {annualPartnerRevenue.map((item, index) => {
-                    const previous =
-                      index === 0
-                        ? annualPartnerRevenue[0].revenue
-                        : annualPartnerRevenue[index - 1].revenue;
-
-                    const growth =
-                      index === 0
-                        ? 0
-                        : ((item.revenue - previous) / previous) * 100;
-
-                    return (
+                    <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#063F3A]/10">
                       <motion.div
-                        key={item.year}
-                        initial={{ opacity: 0, y: 18 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{ width: 0 }}
+                        whileInView={{
+                          width: `${(item.revenue / maxRevenue) * 100}%`,
+                        }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.45, delay: index * 0.08 }}
-                        className="rounded-[1.5rem] border border-white/10 bg-white/[0.05] p-5"
-                      >
-                        <div className="flex items-center justify-between gap-4">
-                          <div>
-                            <p className="text-sm text-white/45">
-                              {item.year}
-                            </p>
-
-                            <p className="mt-2 text-2xl font-black">
-                              {format(item.revenue)}
-                              <span className="mr-1 text-sm text-[#B5121B]">
-                                $
-                              </span>
-                            </p>
-                          </div>
-
-                          <span className="rounded-full bg-[#B5121B] px-4 py-2 text-xs font-bold text-white">
-                            {index === 0 ? "أساس" : `+${growth.toFixed(1)}%`}
-                          </span>
-                        </div>
-
-                        <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{
-                              width: `${
-                                (item.revenue /
-                                  annualPartnerRevenue[
-                                    annualPartnerRevenue.length - 1
-                                  ].revenue) *
-                                100
-                              }%`,
-                            }}
-                            viewport={{ once: true }}
-                            transition={{
-                              duration: 0.9,
-                              delay: 0.15 + index * 0.08,
-                            }}
-                            className="h-full rounded-full bg-[#B5121B]"
-                          />
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-8 rounded-[2rem] border border-[#B5121B]/40 bg-[#B5121B]/15 p-6">
-                  <p className="text-sm font-semibold text-white">
-                    ملاحظة على التوقعات
-                  </p>
-
-                  <p className="mt-3 leading-8 text-white/65">
-                    هذه الأرقام تقديرية وتعتمد على استمرار التشغيل وفق السيناريو
-                    المتوسط، مع تحسن تدريجي في الأداء السنوي. يتم تثبيت الأرقام
-                    النهائية بعد أول 60 يوم تشغيل فعلي وقياس الإشغال ومتوسط صرف
-                    الطاولة.
-                  </p>
-                </div>
+                        transition={{
+                          duration: 0.9,
+                          delay: 0.15 + index * 0.08,
+                        }}
+                        className="h-full rounded-full bg-[#063F3A]"
+                      />
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.65 }}
-            className="mt-12 rounded-[2rem] bg-[#141111] p-8 text-white md:p-10"
-          >
-            <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
-              <div>
-                <p className="text-sm font-semibold text-[#B5121B]">
-                  التوصية النهائية
-                </p>
-
-                <h3 className="mt-3 text-3xl font-bold leading-tight">
-                  الانتقال إلى تشغيل تجريبي منظم قبل التوسع الكامل
-                </h3>
-              </div>
-
-              <p className="leading-9 text-white/65">
-                يوصى بالبدء بمرحلة تشغيل تجريبية تقيس الإشغال، متوسط صرف
-                الطاولة، كلفة المواد، وأداء الكادر خلال أول 60 يومًا. وبعد ظهور
-                النتائج الفعلية، يمكن تعديل ساعات التشغيل، قائمة الأسعار، ونظام
-                الحجوزات قبل رفع الطاقة التشغيلية بالكامل.
+          <div className="mt-8 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.65 }}
+              className="rounded-[1.8rem] bg-[#063F3A] p-7 text-white"
+            >
+              <p className="text-sm font-semibold text-[#9EF0C2]">
+                القرار المختصر
               </p>
-            </div>
-          </motion.div>
+
+              <h3 className="mt-3 text-3xl font-semibold leading-tight">
+                المشروع قابل للاستثمار بشرط تشغيل منضبط
+              </h3>
+
+              <p className="mt-5 leading-8 text-white/66">
+                قوة المشروع ليست فقط في المكان، بل في تحويل المكان إلى طلب يومي
+                وحجوزات خاصة بعائد واضح.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.65 }}
+              className="rounded-[1.8rem] border border-[#063F3A]/10 bg-white p-7 shadow-sm"
+            >
+              <p className="text-sm font-semibold text-[#063F3A]">
+                التوصية النهائية
+              </p>
+
+              <h3 className="mt-3 text-3xl font-semibold leading-tight text-[#092E2A]">
+                تشغيل تجريبي 60 يومًا قبل التوسع الكامل
+              </h3>
+
+              <p className="mt-5 leading-8 text-[#5F6B67]">
+                يتم قياس الإشغال، معدل صرف الطاولة، كلفة المواد، وأداء الكادر،
+                ثم تثبيت النموذج التشغيلي على الأرقام الفعلية.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
+      <div dir="rtl" className="border-t border-[#063F3A]/10 bg-[#F7F4EE] px-5 py-10 text-center md:px-10">
+        <a
+          href="/hoa-investment-contract.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-[#063F3A] px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-[#063F3A]/20 transition-colors hover:bg-[#0A4B45] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#063F3A] sm:px-10"
+        >
+          <FileText aria-hidden="true" className="size-5 shrink-0 text-[#9EF0C2]" />
+          فتح عقد الشراكة (PDF)
+        </a>
+      </div>
+
       <footer
         dir="rtl"
-        className="border-t border-white/10 bg-[#111010] px-5 py-8 text-white md:px-10"
+        className="border-t border-[#063F3A]/10 bg-[#063F3A] px-5 py-8 text-white md:px-10"
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-lg font-bold">بيت التحفيات</p>
+            <p className="text-lg font-semibold">بيت التحفيات</p>
             <p className="mt-1 text-sm text-white/50">
               دراسة جدوى تشغيلية واستثمارية
             </p>
@@ -338,5 +312,31 @@ export default function SimpleConclusion() {
         </div>
       </footer>
     </>
+  );
+}
+
+function MetricCard({
+  label,
+  value,
+  suffix,
+}: {
+  label: string;
+  value: number;
+  suffix: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="rounded-[1.5rem] border border-[#063F3A]/10 bg-white p-6 shadow-sm"
+    >
+      <p className="text-sm text-[#64716C]">{label}</p>
+
+      <p className="mt-3 text-3xl font-semibold text-[#092E2A]">
+        <CountUp value={value} suffix={suffix} />
+      </p>
+    </motion.div>
   );
 }

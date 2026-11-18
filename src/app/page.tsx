@@ -1,4 +1,4 @@
-import AboutHouse from "@/components/AboutHouse";
+import AgreementTerms from "@/components/AgreementTerms";
 import Hero from "@/components/Hero";
 import InitialInvestment from "@/components/InitialInvestment";
 import InvestmentReturn from "@/components/InvestmentReturn";
@@ -16,7 +16,7 @@ export default function Home() {
     <>
       <TopBar />
       <Hero />
-      <AboutHouse />
+      <AgreementTerms />
       <OperationalOpportunity />
       <OperatingModel />
       <InitialInvestment />

@@ -1,59 +1,61 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { monthlyOperatingCosts } from "./feasibilityModel";
 
 const successFactors = [
   {
-    title: "إدارة الإشغال اليومي",
+    title: "إدارة إشغال الطاولات",
     text: "رفع معدل إشغال الطاولات خلال أيام الأسبوع، وعدم الاعتماد فقط على نهاية الأسبوع أو المواسم.",
     indicator: "Occupancy",
   },
   {
-    title: "متوسط صرف الطاولة",
-    text: "تحسين متوسط الفاتورة من خلال قائمة مدروسة، مشروبات، أراكيل، حجوزات خاصة، وتجارب موسمية.",
+    title: "رفع معدل صرف الطاولة",
+    text: "تحسين متوسط الفاتورة من خلال قائمة مختصرة ومدروسة، مشروبات، أراكيل، وتجارب ضيافة مناسبة لهوية المكان.",
     indicator: "Average Spend",
   },
   {
-    title: "ضبط الرواتب والشفتات",
-    text: "تنظيم الكادر حسب ساعات الذروة، وربط عدد العاملين بحركة الطلب الفعلية داخل المكان.",
-    indicator: "Staff Control",
+    title: "تنظيم الحجوزات الخاصة",
+    text: "إدارة أيام المناسبات بوضوح، لأن يوم الحجز الخاص تتوقف فيه خدمة الكافيه ويجب أن يعوض ذلك بإيراد مساند مجزٍ.",
+    indicator: "Private Booking",
   },
   {
-    title: "التسويق والحجوزات",
-    text: "تحويل هوية المكان إلى طلب فعلي من خلال محتوى بصري، حجوزات مسبقة، مناسبات، وتجارب خاصة.",
-    indicator: "Demand",
+    title: "ضبط الكادر والشفتات",
+    text: "ربط عدد العاملين بحركة الطلب وساعات الذروة، حتى لا تتحول الرواتب إلى ضغط ثابت على صافي الربح.",
+    indicator: "Staff Control",
   },
 ];
 
 const controlPoints = [
   {
-    label: "كلفة المواد",
-    value: "35%",
-    note: "نسبة تقديرية يجب مراقبتها شهريًا حتى لا تضغط على الهامش.",
+    label: "المصاريف التشغيلية",
+    value: `${(monthlyOperatingCosts / 1000).toFixed(1)}K$`,
+    note: "تشمل الرواتب، الكهرباء، الخدمات، الصيانة، التسويق، والإيجار الشهري.",
   },
   {
-    label: "المصاريف الثابتة",
-    value: "23.2K$",
-    note: "الحد الأدنى الشهري المطلوب تغطيته قبل تحقيق ربح فعلي.",
-  },
-  {
-    label: "الطاقة التشغيلية",
+    label: "عدد الطاولات",
     value: "40",
-    note: "طاولة بطاقة استيعابية تقارب 120 شخصًا.",
+    note: "طاولة بطاقة استيعابية تقارب 120 شخصًا عند التشغيل الكامل.",
   },
   {
-    label: "نقطة التعادل",
-    value: "35.7K$",
-    note: "مبيعات شهرية تقريبية للوصول إلى التعادل.",
+    label: "كلفة مواد الضيافة",
+    value: "35%",
+    note: "نسبة تقديرية من إيراد الطاولات، ويجب ضبطها شهريًا لحماية هامش الربح.",
+  },
+  {
+    label: "تهيئة الحجوزات",
+    value: "20%",
+    note: "نسبة تقديرية من إيرادات المناسبات والحجوزات الخاصة لتغطية الترتيب والتنظيف والدعم الإضافي.",
   },
 ];
 
 const recommendations = [
   "اعتماد نظام حجوزات واضح للطاولات والجلسات الخاصة.",
-  "إطلاق تدريجي للتشغيل بدل تشغيل كامل الطاقة من اليوم الأول.",
-  "قياس المبيعات اليومية حسب نوع الجلسة وفترة الذروة.",
+  "تحديد حد أدنى لإيراد يوم المناسبة قبل إيقاف خدمة الكافيه طوال اليوم.",
+  "قياس المبيعات اليومية حسب الفترة: صباحية، مسائية، نهاية الأسبوع، ومناسبات.",
   "مراجعة قائمة الطعام والمشروبات شهريًا حسب الربحية والطلب.",
-  "تثبيت نظام محاسبي يومي يربط المبيعات بالمصاريف وكلفة المواد.",
+  "تنظيم الشفتات حسب الذروة بدل تثبيت نفس الكادر طوال اليوم.",
+  "إصدار تقرير شهري مختصر يربط الإيرادات بالمصاريف وكلفة المواد.",
 ];
 
 export default function RiskAndSuccess() {
@@ -61,10 +63,10 @@ export default function RiskAndSuccess() {
     <section
       id="risk"
       dir="rtl"
-      className="relative overflow-hidden bg-[#F8F6F2] px-5 py-20 text-[#141111] md:px-10 md:py-28"
+      className="relative overflow-hidden bg-[#F7F4EE] px-5 py-20 text-[#092E2A] md:px-10 md:py-24"
     >
-      <div className="absolute right-0 top-0 h-[360px] w-[360px] rounded-bl-[8rem] bg-[#7A1018]/10" />
-      <div className="absolute bottom-0 left-0 h-[360px] w-[360px] rounded-tr-[8rem] bg-black/[0.04]" />
+      <div className="absolute left-[-120px] top-[-120px] h-[320px] w-[320px] rounded-full bg-[#7BE0AE]/20 blur-3xl" />
+      <div className="absolute bottom-[-140px] right-[-140px] h-[360px] w-[360px] rounded-full bg-[#063F3A]/8 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
         <motion.div
@@ -75,18 +77,18 @@ export default function RiskAndSuccess() {
           className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end"
         >
           <div>
-            <p className="mb-4 inline-flex rounded-full border border-[#7A1018]/20 bg-white px-5 py-2 text-sm font-semibold text-[#7A1018] shadow-sm">
+            <p className="mb-5 inline-flex rounded-full border border-[#063F3A]/15 bg-white px-4 py-2 text-sm font-semibold text-[#063F3A] shadow-sm">
               عوامل النجاح وضبط التشغيل
             </p>
 
-            <h2 className="max-w-3xl text-3xl font-bold leading-tight md:text-5xl">
-              نجاح المشروع يعتمد على تحويل الطاقة التشغيلية إلى إيراد فعلي
+            <h2 className="max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.02em] md:text-5xl">
+              نجاح المشروع يعتمد على ضبط التشغيل لا على الهوية وحدها
             </h2>
 
-            <p className="mt-6 max-w-3xl text-lg leading-9 text-[#625955]">
-              تعتمد جدوى التشغيل على إدارة 40 طاولة بطاقة استيعابية تقارب 120
-              شخصًا، مع ضبط المصاريف الشهرية، كلفة المواد، ومتوسط صرف الطاولة.
-              كل تحسن في هذه المؤشرات ينعكس مباشرة على الربحية.
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-[#5F6B67]">
+              تمتلك الوجهة قيمة تراثية وبصرية عالية، لكن تحويل هذه القيمة إلى
+              عائد مستقر يتطلب إدارة دقيقة للإشغال، معدل صرف الطاولة، الحجوزات
+              الخاصة، وكلفة التشغيل الشهرية.
             </p>
           </div>
 
@@ -98,15 +100,15 @@ export default function RiskAndSuccess() {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.08 }}
-                className="rounded-[2rem] bg-[#141111] p-6 text-white shadow-xl shadow-black/10"
+                className="rounded-[1.5rem] border border-[#063F3A]/10 bg-white p-6 shadow-sm"
               >
-                <p className="text-sm text-white/55">{item.label}</p>
+                <p className="text-sm text-[#64716C]">{item.label}</p>
 
-                <p className="mt-3 text-4xl font-black text-white">
+                <p className="mt-3 text-4xl font-semibold text-[#063F3A]">
                   {item.value}
                 </p>
 
-                <p className="mt-3 text-sm leading-6 text-white/45">
+                <p className="mt-3 text-sm leading-6 text-[#64716C]">
                   {item.note}
                 </p>
               </motion.div>
@@ -114,7 +116,7 @@ export default function RiskAndSuccess() {
           </div>
         </motion.div>
 
-        <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {successFactors.map((item, index) => (
             <motion.div
               key={item.title}
@@ -122,46 +124,46 @@ export default function RiskAndSuccess() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.55, delay: index * 0.08 }}
-              className="group relative overflow-hidden rounded-[2rem] border border-black/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10"
+              className="group relative overflow-hidden rounded-[1.7rem] border border-[#063F3A]/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#063F3A]/10"
             >
-              <div className="absolute left-0 top-0 h-24 w-24 rounded-br-[3rem] bg-[#7A1018] transition-all duration-300 group-hover:h-28 group-hover:w-28" />
+              <div className="absolute left-0 top-0 h-24 w-24 rounded-br-[3rem] bg-[#063F3A] transition-all duration-300 group-hover:h-28 group-hover:w-28" />
 
               <div className="relative">
-                <p className="mb-10 text-left text-xs font-bold tracking-[0.2em] text-white">
+                <p className="mb-10 text-left text-xs font-semibold tracking-[0.18em] text-[#BFF5DA]">
                   {item.indicator}
                 </p>
 
-                <h3 className="mb-4 text-2xl font-bold text-[#141111]">
+                <h3 className="mb-4 text-2xl font-semibold text-[#092E2A]">
                   {item.title}
                 </h3>
 
-                <p className="leading-8 text-[#625955]">{item.text}</p>
+                <p className="leading-8 text-[#64716C]">{item.text}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        <div className="mt-14 grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+        <div className="mt-12 grid gap-7 lg:grid-cols-[0.85fr_1.15fr]">
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.65 }}
-            className="rounded-[2rem] bg-[#7A1018] p-8 text-white shadow-xl shadow-[#7A1018]/20 md:p-10"
+            className="rounded-[1.8rem] bg-[#063F3A] p-8 text-white shadow-xl shadow-[#063F3A]/15 md:p-10"
           >
-            <p className="text-sm font-semibold text-white/70">
+            <p className="text-sm font-semibold text-[#9EF0C2]">
               قراءة إدارية
             </p>
 
-            <h3 className="mt-3 text-3xl font-bold leading-tight">
-              التشغيل يحتاج نظام قياس يومي وليس إدارة عشوائية
+            <h3 className="mt-3 text-3xl font-semibold leading-tight">
+              التشغيل يحتاج نظام قياس يومي وليس قرارات عشوائية
             </h3>
 
-            <p className="mt-5 leading-9 text-white/75">
-              الطاقة التشغيلية وحدها لا تكفي. المهم هو تحويل الطاولات المتاحة
-              إلى إشغال فعلي، ورفع متوسط الصرف، مع ضبط الكادر وكلفة المواد.
-              لذلك يجب أن تكون القرارات اليومية مبنية على أرقام المبيعات
-              والحجوزات وليس على الانطباع فقط.
+            <p className="mt-5 leading-8 text-white/66">
+              الطاقة التشغيلية وحدها لا تكفي. الأهم هو تحويل الطاولات المتاحة
+              إلى إشغال فعلي، ورفع متوسط الصرف، مع ضبط الكادر وكلفة المواد
+              والحجوزات. لذلك يجب أن تكون القرارات اليومية مبنية على أرقام
+              المبيعات والحجوزات وليس على الانطباع فقط.
             </p>
           </motion.div>
 
@@ -170,31 +172,31 @@ export default function RiskAndSuccess() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.65 }}
-            className="rounded-[2rem] border border-black/10 bg-white p-8 shadow-xl shadow-black/5 md:p-10"
+            className="rounded-[1.8rem] border border-[#063F3A]/10 bg-white p-8 shadow-xl shadow-[#063F3A]/5 md:p-10"
           >
-            <p className="text-sm font-semibold text-[#7A1018]">
+            <p className="text-sm font-semibold text-[#063F3A]">
               توصيات تشغيلية
             </p>
 
-            <h3 className="mt-3 text-3xl font-bold leading-tight">
+            <h3 className="mt-3 text-3xl font-semibold leading-tight text-[#092E2A]">
               خطوات عملية لتعزيز فرص الربحية
             </h3>
 
-            <div className="mt-8 space-y-4">
+            <div className="mt-8 grid gap-4">
               {recommendations.map((item, index) => (
                 <motion.div
                   key={item}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: index * 0.08 }}
-                  className="flex gap-4 rounded-2xl bg-[#F8F6F2] p-4"
+                  transition={{ duration: 0.45, delay: index * 0.06 }}
+                  className="flex gap-4 rounded-2xl bg-[#F7F4EE] p-4"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#141111] text-sm font-bold text-white">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#063F3A] text-sm font-semibold text-white">
                     {index + 1}
                   </div>
 
-                  <p className="leading-8 text-[#3f3834]">{item}</p>
+                  <p className="leading-8 text-[#5F6B67]">{item}</p>
                 </motion.div>
               ))}
             </div>
@@ -206,24 +208,25 @@ export default function RiskAndSuccess() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.65 }}
-          className="mt-12 rounded-[2rem] bg-[#141111] p-8 text-white md:p-10"
+          className="mt-8 rounded-[1.8rem] border border-[#7BE0AE]/20 bg-[#063F3A] p-8 text-white md:p-10"
         >
-          <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
+          <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold text-[#B5121B]">
+              <p className="text-sm font-semibold text-[#9EF0C2]">
                 الخلاصة التشغيلية
               </p>
 
-              <h3 className="mt-3 text-3xl font-bold leading-tight">
+              <h3 className="mt-3 text-3xl font-semibold leading-tight">
                 ضبط المؤشرات أهم من عدد الطاولات وحده
               </h3>
             </div>
 
-            <p className="leading-9 text-white/65">
+            <p className="leading-8 text-white/66">
               المؤشرات الأساسية التي يجب مراقبتها شهريًا هي: معدل إشغال
-              الطاولات، متوسط صرف الطاولة، كلفة المواد، إنتاجية الكادر، وعدد
-              الحجوزات الخاصة. عند ضبط هذه العناصر، يصبح المشروع أكثر قدرة على
-              تحويل هويته التراثية إلى عائد مالي مستقر.
+              الطاولات، معدل صرف الطاولة، كلفة مواد الضيافة، كلفة تهيئة
+              الحجوزات الخاصة، إنتاجية الكادر، وعدد أيام الحجز التي يُغلق فيها
+              دار الضيافة. عند ضبط هذه العناصر يصبح المشروع أكثر قدرة على تحويل
+              هويته التراثية إلى عائد مالي مستقر.
             </p>
           </div>
         </motion.div>

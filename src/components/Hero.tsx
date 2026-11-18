@@ -1,108 +1,184 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { animate, motion } from "framer-motion";
+import { investmentAmount } from "./feasibilityModel";
 
-const stats = [
-  { label: "قيمة الدخول الاستثمارية", value: "160K", suffix: "$" },
-  { label: "الإيجار الشهري المقترح", value: "5K", suffix: "$" },
-  { label: "استثمار سابق في الإحياء والترميم", value: "+500K", suffix: "$" },
+type StatItem = {
+  label: string;
+  value: number;
+  prefix?: string;
+  suffix?: string;
+};
+
+const stats: StatItem[] = [
+  {
+    label: "قيمة الدخول الاستثمارية",
+    value: investmentAmount / 1_000,
+    suffix: "K$",
+  },
+  {
+    label: "استثمار سابق في الإحياء والترميم",
+    value: 500,
+    prefix: "+",
+    suffix: "K$",
+  },
+  {
+    label: "مصادر دخل تشغيلية",
+    value: 5,
+    suffix: "+",
+  },
 ];
+
+function CountUp({
+  value,
+  prefix = "",
+  suffix = "",
+}: {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    const controls = animate(0, value, {
+      duration: 1.8,
+      ease: "easeOut",
+      onUpdate: (latest) => {
+        setDisplayValue(Math.round(latest));
+      },
+    });
+
+    return () => controls.stop();
+  }, [value]);
+
+  return (
+    <span>
+      {prefix}
+      {displayValue}
+      {suffix}
+    </span>
+  );
+}
 
 export default function Hero() {
   return (
     <section
       id="home"
       dir="rtl"
-      className="relative overflow-hidden bg-[#F8F6F2] px-5 pb-16 pt-32 md:px-10 md:pb-24 md:pt-40"
+      className="relative isolate min-h-screen overflow-hidden bg-[#063F3A] px-5 pb-16 pt-28 text-white md:px-10 md:pb-24 md:pt-36"
     >
-      <div className="absolute right-0 top-0 h-[420px] w-[420px] rounded-full bg-[#7A1018]/10 blur-3xl" />
-      <div className="absolute bottom-0 left-0 h-[360px] w-[360px] rounded-full bg-black/5 blur-3xl" />
+      {/* خلفية ناعمة بدون مربعات */}
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_20%,rgba(123,224,174,0.20),transparent_30%),radial-gradient(circle_at_85%_82%,rgba(2,28,25,0.95),transparent_46%)]" />
+      <div className="absolute inset-x-0 bottom-0 -z-20 h-1/2 bg-gradient-to-t from-[#032B28] to-transparent" />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+      {/* زخارف بسيطة مثل المرجع */}
+      <div className="absolute right-[-120px] top-[-120px] -z-10 h-[330px] w-[330px] rounded-full border border-[#7BE0AE]/18" />
+      <div className="absolute right-[-52px] top-[-52px] -z-10 h-[205px] w-[205px] rounded-full border border-[#7BE0AE]/16" />
+      <div className="absolute left-[8%] top-[21%] -z-10 h-20 w-20 rounded-full bg-[#7BE0AE]/60" />
+      <div className="absolute bottom-[12%] right-[48%] -z-10 h-12 w-12 rounded-full bg-[#7BE0AE]/38" />
+
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        {/* الصورة */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
+          initial={{ opacity: 0, x: 28 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.75 }}
+          className="order-2 lg:order-1"
         >
-          <p className="mb-5 inline-flex rounded-full border border-[#7A1018]/20 bg-white px-5 py-2 text-sm font-medium text-[#7A1018] shadow-sm">
-            دراسة جدوى تشغيلية لموقع تراثي في بغداد
-          </p>
+          <div className="relative mx-auto max-w-xl">
+            <div className="absolute -right-5 -top-5 h-28 w-28 rounded-tl-[3rem] bg-[#7BE0AE]/75" />
 
-          <h1 className="max-w-4xl text-4xl font-bold leading-[1.25] tracking-tight text-[#141111] md:text-6xl">
-            بيت التحفيات كوجهة تراثية قابلة للتشغيل التجاري المستدام
-          </h1>
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[#082F2C] p-4 shadow-2xl shadow-black/25">
+              <div className="relative h-[420px] overflow-hidden rounded-[1.5rem] bg-[#0B514A] md:h-[500px]">
+                <img
+                  src="/images/hoa-hero.jpg"
+                  alt="بيت التحفيات"
+                  className="h-full w-full object-cover"
+                />
 
-          <p className="mt-6 max-w-3xl text-lg leading-9 text-[#625955] md:text-xl">
-            تعرض هذه الدراسة التصور التشغيلي والمالي لاستثمار بيت التحفيات
-            كوجهة ضيافة ومطعم وحديقة فعاليات، بالاعتماد على قيمة المكان
-            التاريخية، وجاهزية الموقع، وحجم المصاريف والإيرادات المتوقعة.
-          </p>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#031F1D]/80 via-[#031F1D]/20 to-transparent" />
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="#numbers"
-              className="rounded-full bg-[#7A1018] px-7 py-3 text-sm font-bold text-white shadow-lg shadow-[#7A1018]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#5f0c12]"
-            >
-              عرض الأرقام
-            </a>
+                <div className="absolute left-6 top-6 rounded-full border border-white/15 bg-black/20 px-4 py-2 text-xs text-white/75 backdrop-blur">
+                  Investment Case
+                </div>
 
-            <a
-              href="#about"
-              className="rounded-full border border-black/10 bg-white px-7 py-3 text-sm font-bold text-[#141111] transition-all duration-300 hover:-translate-y-1 hover:border-[#7A1018]/30 hover:text-[#7A1018]"
-            >
-              نبذة عن بيت التحفيات
-            </a>
-          </div>
-        </motion.div>
+                <div className="absolute bottom-6 left-6 right-6">
+                  <p className="text-sm text-[#9EF0C2]">
+                    House of Antiques — Baghdad
+                  </p>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.15 }}
-          className="relative"
-        >
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-black/10 bg-white p-5 shadow-2xl shadow-black/10">
-            <div className="absolute left-0 top-0 h-32 w-32 rounded-br-[4rem] bg-[#7A1018]" />
-
-            <div className="relative rounded-[2rem] bg-[#141111] p-8 text-white">
-              <p className="mb-16 text-sm text-white/60">
-                Feasibility Study
-              </p>
-
-              <div className="space-y-4">
-                <p className="text-sm text-[#E8D7C3]">House of Antiques</p>
-                <h2 className="max-w-md text-4xl font-bold leading-tight">
-                  أصل تراثي قائم بقابلية تشغيل تجارية
-                </h2>
-              </div>
-
-              <div className="mt-12 grid gap-4">
-                {stats.map((item, index) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, x: 24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.55, delay: 0.35 + index * 0.12 }}
-                    className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur"
-                  >
-                    <span className="text-sm text-white/70">{item.label}</span>
-                    <span className="text-2xl font-bold">
-                      {item.value}
-                      <span className="mr-1 text-base text-[#E8D7C3]">
-                        {item.suffix}
-                      </span>
-                    </span>
-                  </motion.div>
-                ))}
+                  <h2 className="mt-2 max-w-md text-3xl font-semibold leading-tight text-white">
+                    أصل تراثي قائم بقابلية تشغيل تجارية متعددة
+                  </h2>
+                </div>
               </div>
             </div>
           </div>
+        </motion.div>
 
-          <div className="absolute -bottom-6 -right-6 hidden rounded-3xl bg-white p-5 shadow-xl md:block">
-            <p className="text-sm text-[#7A1018]">محور الدراسة</p>
-            <p className="mt-1 text-2xl font-bold text-[#141111]">
-              القيمة التاريخية مقابل العائد التشغيلي
-            </p>
+        {/* النص */}
+        <motion.div
+          initial={{ opacity: 0, y: 26 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.75 }}
+          className="order-1 text-center lg:order-2 lg:text-right"
+        >
+          <div className="mb-7 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <span className="rounded-full border border-[#7BE0AE]/25 bg-white/8 px-4 py-2 text-sm font-medium text-[#BFF5DA] backdrop-blur">
+              دراسة استثمارية وتشغيلية
+            </span>
+
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/65">
+              بيت التحفيات — بغداد
+            </span>
+          </div>
+
+          <h1 className="mx-auto max-w-4xl text-4xl font-semibold leading-[1.22] tracking-[-0.02em] text-white md:text-6xl lg:mx-0">
+            دار ضيافة بيت التحفيات (خاتون)
+          </h1>
+
+          <div className="mt-9 flex flex-wrap justify-center gap-4 lg:justify-start">
+            <a
+              href="#numbers"
+              className="rounded-full bg-[#7BE0AE] px-7 py-3.5 text-sm font-bold text-[#062B28] shadow-xl shadow-[#7BE0AE]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#98F0C5]"
+            >
+              عرض المؤشرات المالية
+            </a>
+
+            <a
+              href="#revenue"
+              className="rounded-full border border-white/15 bg-white/8 px-7 py-3.5 text-sm font-bold text-white backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-[#7BE0AE]/50 hover:bg-white/12"
+            >
+              مصادر الإيرادات
+            </a>
+          </div>
+
+          <div className="mt-12 grid gap-4 sm:grid-cols-3">
+            {stats.map((item, index) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.2 + index * 0.1 }}
+                className="rounded-[1.2rem] border border-white/10 bg-white/[0.06] px-5 py-4 backdrop-blur"
+              >
+                <p className="text-sm leading-6 text-white/55">
+                  {item.label}
+                </p>
+
+                <div className="mt-2 flex items-end justify-center gap-1 lg:justify-start">
+                  <span className="text-3xl font-semibold text-white">
+                    <CountUp
+                      value={item.value}
+                      prefix={item.prefix}
+                      suffix={item.suffix}
+                    />
+                  </span>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>

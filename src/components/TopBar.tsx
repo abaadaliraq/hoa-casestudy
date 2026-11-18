@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 
 const navLinks = [
   { label: "الرئيسية", href: "#home" },
-  { label: "نبذة", href: "#about" },
+  { label: "الاتفاق", href: "#agreement" },
   { label: "الفرصة", href: "#numbers" },
   { label: "التشغيل", href: "#operations" },
   { label: "الاستثمار", href: "#investment" },
   { label: "المصاريف", href: "#costs" },
-  { label: "الإيرادات", href: "#feasibility" },
-  { label: "العائد", href: "#roi" },
+  { label: "الإيرادات", href: "#revenue" },
+  { label: "رد الاستثمار", href: "#roi" },
   { label: "الخلاصة", href: "#conclusion" },
 ];
 
@@ -36,7 +36,7 @@ export default function TopBar() {
 
     if (!target) return;
 
-    const topOffset = 90;
+    const topOffset = 86;
     const elementPosition =
       target.getBoundingClientRect().top + window.scrollY;
 
@@ -51,8 +51,8 @@ export default function TopBar() {
       dir="rtl"
       className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${
         scrolled
-          ? "bg-[#6F0F17]/95 shadow-xl shadow-black/10 backdrop-blur-xl"
-          : "bg-[#7A1018]/95 backdrop-blur-xl"
+          ? "border-b border-white/10 bg-[#052F2C]/92 shadow-xl shadow-black/15 backdrop-blur-xl"
+          : "bg-[#063F3A]/88 backdrop-blur-xl"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 md:px-10">
@@ -61,42 +61,43 @@ export default function TopBar() {
           onClick={(event) => handleSmoothScroll(event, "#home")}
           className="min-w-fit"
         >
-          <div>
-            <p className="text-base font-black tracking-tight text-white md:text-lg">
+          <div className="leading-none">
+            <p className="text-base font-semibold tracking-tight text-white md:text-lg">
               بيت التحفيات
             </p>
-            <p className="mt-0.5 text-xs font-medium text-white/65">
-              دراسة جدوى تشغيلية واستثمارية
+
+            <p className="mt-1.5 text-xs font-medium text-[#BFF5DA]/70">
+              دراسة استثمارية وتشغيلية
             </p>
           </div>
         </Link>
 
-        <nav className="hidden flex-1 items-center justify-center gap-2 xl:flex">
+        <nav className="hidden flex-1 items-center justify-center gap-1.5 xl:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={(event) => handleSmoothScroll(event, link.href)}
-              className="whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold text-white/75 transition-all duration-300 hover:bg-white hover:text-[#7A1018]"
+              className="whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold text-white/68 transition-all duration-300 hover:bg-[#7BE0AE]/14 hover:text-[#BFF5DA]"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex xl:hidden">
+        <div className="hidden items-center gap-1.5 lg:flex xl:hidden">
           <Link
             href="#investment"
             onClick={(event) => handleSmoothScroll(event, "#investment")}
-            className="rounded-full px-4 py-2 text-sm font-semibold text-white/75 transition-all duration-300 hover:bg-white hover:text-[#7A1018]"
+            className="rounded-full px-4 py-2 text-sm font-semibold text-white/68 transition-all duration-300 hover:bg-[#7BE0AE]/14 hover:text-[#BFF5DA]"
           >
             الاستثمار
           </Link>
 
           <Link
-            href="#feasibility"
-            onClick={(event) => handleSmoothScroll(event, "#feasibility")}
-            className="rounded-full px-4 py-2 text-sm font-semibold text-white/75 transition-all duration-300 hover:bg-white hover:text-[#7A1018]"
+            href="#revenue"
+            onClick={(event) => handleSmoothScroll(event, "#revenue")}
+            className="rounded-full px-4 py-2 text-sm font-semibold text-white/68 transition-all duration-300 hover:bg-[#7BE0AE]/14 hover:text-[#BFF5DA]"
           >
             الإيرادات
           </Link>
@@ -104,16 +105,16 @@ export default function TopBar() {
           <Link
             href="#roi"
             onClick={(event) => handleSmoothScroll(event, "#roi")}
-            className="rounded-full px-4 py-2 text-sm font-semibold text-white/75 transition-all duration-300 hover:bg-white hover:text-[#7A1018]"
+            className="rounded-full px-4 py-2 text-sm font-semibold text-white/68 transition-all duration-300 hover:bg-[#7BE0AE]/14 hover:text-[#BFF5DA]"
           >
-            العائد
+            رد الاستثمار
           </Link>
         </div>
 
         <Link
           href="#conclusion"
           onClick={(event) => handleSmoothScroll(event, "#conclusion")}
-          className="min-w-fit rounded-full bg-white px-5 py-2.5 text-sm font-black text-[#7A1018] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#141111] hover:text-white hover:shadow-lg"
+          className="min-w-fit rounded-full bg-[#7BE0AE] px-5 py-2.5 text-sm font-bold text-[#052B27] shadow-lg shadow-[#7BE0AE]/15 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#9AF0C7]"
         >
           الخلاصة
         </Link>
